@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shupora - Smart curation for a healthier scalp, vibrant locks, and a confident life. Premium wellness tools.">
+    <title>Shupora | Smart Choice. Confident Life.</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <style>
+        :root {
+            --bg-color: #f4f3ec;
+            --text-dark: #2d2d2d;
+            --text-light: #ffffff;
+            --primary-gradient: linear-gradient(90deg, #8E0E5D 0%, #D4145A 50%, #FF3D4A 100%);
+            --accent-yellow: #FFD700;
+            --transition-speed: 0.3s;
+            --drawer-width: 400px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        body.no-scroll { overflow: hidden; } 
+        a { text-decoration: none; color: inherit; transition: color var(--transition-speed); }
+        ul { list-style: none; }
+
+        /* --- 1. Top Banner --- */
+        .top-banner {
+            background: var(--primary-gradient); color: var(--text-light); text-align: center;
+            padding: 10px 20px; font-size: 0.9rem; font-weight: 500; position: relative;
+            display: flex; justify-content: center; align-items: center; height: 40px; overflow: hidden;
+        }
+        .top-banner .nav-arrow { position: absolute; cursor: pointer; opacity: 0.8; transition: opacity var(--transition-speed); }
+        .top-banner .nav-arrow:hover { opacity: 1; }
+        .top-banner .nav-arrow.left { left: 20px; }
+        .top-banner .nav-arrow.right { right: 20px; }
+        .announcement-container { position: relative; width: 100%; height: 20px; }
+        .announcement-msg {
+            position: absolute; top: 0; left: 0; width: 100%; opacity: 0; transform: translateY(15px);
+            animation: slideFade 8s infinite;
+        }
+        .announcement-msg:nth-child(2) { animation-delay: 4s; }
+        @keyframes slideFade {
+            0%, 5% { opacity: 0; transform: translateY(15px); }
+            15%, 40% { opacity: 1; transform: translateY(0); }
+            50%, 100% { opacity: 0; transform: translateY(-15px); }
+        }
+
+        /* --- 2. Header --- */
+        header { padding: 20px 5%; background-color: var(--bg-color); display: flex; flex-direction: column; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .header-top { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .logo-container { text-align: center; }
+        .logo { font-size: 2.2rem; font-weight: 700; letter-spacing: -1px; }
+        .logo span:nth-child(1) { color: #E63946; } 
+        .logo span:nth-child(2) { color: #452b72; } 
+        .logo-tagline { font-size: 0.75rem; color: #666; margin-top: -5px; }
+
+        .nav-icons { font-size: 1.2rem; display: flex; gap: 20px; cursor: pointer; align-items: center;}
+        .nav-icons i { transition: transform var(--transition-speed); }
+        .nav-icons i:hover { transform: scale(1.1); }
+        
+        .cart-icon-wrapper { position: relative; display: flex; align-items: center;}
+        .cart-badge {
+            position: absolute; top: -8px; right: -8px; background: #E63946; color: white;
+            font-size: 0.7rem; font-weight: 700; height: 18px; width: 18px;
+            display: flex; justify-content: center; align-items: center; border-radius: 50%;
+        }
+
+        .hamburger { display: none; font-size: 1.5rem; cursor: pointer;}
+        nav ul { display: flex; gap: 30px; font-size: 0.95rem; color: #555; }
+        nav ul li a:hover { color: var(--text-dark); border-bottom: 2px solid var(--text-dark); padding-bottom: 2px; }
+
+        .sticky-reviews {
+            position: fixed; right: 0; top: 50%; transform: translateY(-50%);
+            background-color: var(--accent-yellow); color: #000;
+            padding: 15px 5px; writing-mode: vertical-rl; text-orientation: mixed;
+            font-weight: 600; z-index: 99; cursor: pointer;
+            border-radius: 5px 0 0 5px; box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            transition: transform var(--transition-speed);
+        }
+        .sticky-reviews:hover { transform: translateY(-50%) translateX(-5px); }
+
+        /* --- 3. Drawers & Overlay --- */
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 999; opacity: 0; visibility: hidden;
+            transition: all var(--transition-speed) ease; backdrop-filter: blur(3px);
+        }
+        .overlay.active { opacity: 1; visibility: visible; }
+
+        .mobile-menu-drawer {
+            position: fixed; top: 0; left: -300px; width: 300px; height: 100%;
+            background: var(--bg-color); z-index: 1000; box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+            transition: left var(--transition-speed) ease; padding: 20px; overflow-y: auto;
+        }
+        .mobile-menu-drawer.open { left: 0; }
+        .close-menu { font-size: 1.5rem; cursor: pointer; float: right; margin-bottom: 20px;}
+        .mobile-nav ul { display: flex; flex-direction: column; gap: 20px; clear: both;}
+        .mobile-nav ul li a { font-size: 1.2rem; font-weight: 500;}
+
+        .cart-drawer {
+            position: fixed; top: 0; right: calc(var(--drawer-width) * -1); width: var(--drawer-width); max-width: 100%; height: 100%;
+            background: #fff; z-index: 1000; box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            transition: right var(--transition-speed) ease; display: flex; flex-direction: column;
+        }
+        .cart-drawer.open { right: 0; }
+        .cart-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .cart-header h2 { font-size: 1.2rem; font-weight: 600; }
+        .close-cart { font-size: 1.5rem; cursor: pointer; }
+        
+        .cart-body { padding: 20px; flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+        .empty-cart-msg { text-align: center; color: #888; margin-top: 50px; display: none; }
+        
+        .cart-item { display: flex; gap: 15px; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px;}
+        .cart-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; background: #f9f9f9; }
+        .cart-item-details { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;}
+        .cart-item-title { font-size: 0.9rem; font-weight: 500; }
+        .cart-item-price { font-weight: 600; color: #D4145A; font-size: 0.95rem;}
+        .cart-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 10px;}
+        .qty-selector { display: flex; align-items: center; border: 1px solid #ddd; border-radius: 4px; overflow: hidden;}
+        .qty-btn { background: #f9f9f9; border: none; padding: 5px 10px; cursor: pointer; }
+        .qty-input { width: 30px; text-align: center; border: none; border-left: 1px solid #ddd; border-right: 1px solid #ddd; font-size: 0.9rem; pointer-events: none;}
+        .remove-item { color: #888; text-decoration: underline; font-size: 0.8rem; cursor: pointer;}
+
+        .cart-footer { padding: 20px; border-top: 1px solid #eee; background: #fafafa; }
+        .cart-total-row { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; }
+        .checkout-btn { background: #000; color: white; width: 100%; padding: 15px; text-align: center; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; font-size: 1rem;}
+        .checkout-btn:hover { background: #333; }
+
+        /* --- 4. Main Content (Hero & Grid) --- */
+        .hero { padding: 40px 5%; display: flex; align-items: center; justify-content: center; position: relative; max-width: 1400px; margin: 0 auto; }
+        .hero-img-container { width: 80%; border-radius: 15px; overflow: hidden; margin-left: auto; }
+        .hero-img-container img { width: 100%; height: 600px; object-fit: cover; display: block; }
+        .hero-card {
+            position: absolute; left: 5%; top: 50%; transform: translateY(-50%);
+            background: var(--primary-gradient); color: var(--text-light); padding: 60px 40px; border-radius: 20px; width: 400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .hero-card h1 { font-size: 3rem; line-height: 1.1; margin-bottom: 20px; }
+        .hero-card p { font-size: 1rem; margin-bottom: 30px; opacity: 0.9; }
+
+        .btn-outline {
+            border: 1px solid var(--text-light); background: transparent; color: var(--text-light);
+            padding: 12px 25px; border-radius: 8px; font-weight: 500; cursor: pointer; transition: var(--transition-speed);
+        }
+        .btn-outline:hover { background: var(--text-light); color: #D4145A; }
+
+        .section-container { padding: 60px 5%; max-width: 1400px; margin: 0 auto; }
+        .section-title { font-size: 2.5rem; margin-bottom: 40px; color: #333; text-align: center;}
+
+        .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .product-card { text-align: center; display: flex; flex-direction: column; }
+        .product-img-wrapper { background: #eef0f2; border-radius: 15px; padding: 20px; position: relative; margin-bottom: 15px; height: 350px; display: flex; align-items: center; justify-content: center; }
+        .product-img-wrapper img { max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.5s ease; }
+        .product-img-wrapper:hover img { transform: scale(1.05); }
+
+        .badge { position: absolute; bottom: 15px; left: 15px; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; color: white; font-weight: 500; z-index: 2;}
+        .badge.sale { background-color: #6a4a6b; }
+        .badge.sold-out { background-color: #333; }
+
+        .product-title { font-size: 1.1rem; margin-bottom: 10px; font-weight: 500; }
+        .stars { color: var(--accent-yellow); margin-bottom: 10px; font-size: 0.9rem;}
+        .stars span { color: #888; font-size: 0.8rem; }
+        .price { margin-bottom: 20px; font-weight: 500; flex-grow: 1;}
+        .old-price { text-decoration: line-through; color: #888; margin-right: 10px; font-size: 0.9rem;}
+        
+        .btn-black { background-color: #000; color: #fff; width: 100%; padding: 15px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition-speed); display: flex; justify-content: center; align-items: center; gap: 10px;}
+        .btn-black:hover { background-color: #333; }
+        .btn-black.added { background-color: #2E7D32; } 
+
+        /* --- 5. Mission Banner --- */
+        .mission-banner { background: var(--primary-gradient); color: white; text-align: center; padding: 80px 5%; }
+        .mission-banner h2 { font-size: 1.8rem; max-width: 800px; margin: 0 auto 20px auto; font-weight: 500; }
+        .mission-buttons { display: flex; gap: 20px; justify-content: center; margin-top: 30px;}
+
+        /* --- 6. Features Grid --- */
+        .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 60px 5%; max-width: 1400px; margin: -40px auto 0 auto; }
+        .feature-card { background: white; padding: 40px 20px; text-align: center; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.03); transition: transform var(--transition-speed); }
+        .feature-card:hover { transform: translateY(-5px); }
+        .feature-card i { font-size: 3rem; color: #333; margin-bottom: 20px; }
+        .feature-card p { font-size: 0.9rem; color: #666; }
+
+        /* --- 7. Collections --- */
+        .collections-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .collection-card { background: #f2ebd9; border-radius: 15px; overflow: hidden; text-align: center; cursor: pointer; transition: transform var(--transition-speed);}
+        .collection-card:hover { transform: translateY(-5px); }
+        .collection-card img { width: 100%; height: 300px; object-fit: cover; }
+        .collection-card p { padding: 20px; font-weight: 500; }
+
+        /* --- 8. Highlights (Video Mockup) --- */
+        .highlights-section { text-align: center; padding: 60px 5%; }
+        .video-mockup { width: 300px; height: 500px; background: #ccc; margin: 20px auto; border-radius: 20px; position: relative; overflow: hidden; }
+        .video-mockup img { width: 100%; height: 100%; object-fit: cover; }
+        .video-overlay-btn { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: #900C3F; color: white; padding: 12px 30px; border-radius: 30px; font-weight: 500; border: none; width: 80%; cursor: pointer; transition: background var(--transition-speed);}
+        .video-overlay-btn:hover { background: #60082a; }
+
+        /* --- 9. Reviews (Draggable Marquee) --- */
+        .reviews-section { padding: 60px 0; text-align: center; overflow: hidden; }
+        .marquee-container { 
+            width: 100%; padding: 20px 0; position: relative; overflow-x: auto; 
+            -ms-overflow-style: none; scrollbar-width: none; scroll-behavior: auto; 
+        }
+        .marquee-container::-webkit-scrollbar { display: none; }
+        .reviews-wrapper { 
+            display: flex; gap: 20px; width: max-content; cursor: grab; user-select: none; -webkit-user-select: none;
+        }
+        .reviews-wrapper.active { cursor: grabbing; }
+        .review-card { background: white; width: 350px; padding: 30px; border-radius: 15px; text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.05); flex-shrink: 0; pointer-events: none; }
+        .reviewer { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; color: white; }
+        .review-text { font-size: 0.95rem; font-style: italic; color: #555; margin-bottom: 20px; line-height: 1.6;}
+        .verified { color: #2E7D32; font-size: 0.85rem; font-weight: 600; }
+
+        /* --- 10. Pre-Footer CTA --- */
+        .cta-banner { background: var(--primary-gradient); color: white; text-align: center; padding: 60px 20px; }
+        .cta-banner h2 { font-size: 2.5rem; margin-bottom: 10px; }
+        .cta-banner .btn-outline { border-radius: 30px; padding: 12px 30px; margin-top: 20px;}
+
+        /* --- 11. FAQ (Interactive) --- */
+        .faq-section { max-width: 800px; margin: 60px auto; padding: 0 20px; }
+        .faq-item { border-bottom: 1px solid #ddd; padding: 20px 0; cursor: pointer; }
+        .faq-question { display: flex; justify-content: space-between; align-items: center; font-weight: 500; font-size: 1.1rem; color: #333; outline: none;}
+        .faq-question div { display: flex; align-items: center; gap: 15px; }
+        .faq-question i.fa-square-check { color: #555; font-size: 1.2rem; }
+        .faq-icon { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); color: #888;}
+        .faq-answer {
+            max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.4s ease;
+            color: #666; line-height: 1.6; padding-left: 35px; font-size: 0.95rem;
+        }
+        .faq-item.active .faq-answer { max-height: 250px; margin-top: 15px; }
+        .faq-item.active .faq-icon { transform: rotate(180deg); }
+
+        /* --- 12. Footer --- */
+        footer { background: var(--primary-gradient); color: white; padding: 60px 5% 20px 5%; }
+        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-bottom: 40px; max-width: 1400px; margin: 0 auto 40px auto; }
+        .footer-col h4 { font-size: 1.2rem; margin-bottom: 20px; font-weight: 600;}
+        .footer-col ul li { margin-bottom: 12px; opacity: 0.9; font-size: 0.95rem;}
+        .social-icons { text-align: center; margin-bottom: 30px; font-size: 1.5rem;}
+        .social-icons i { margin: 0 10px; cursor: pointer; transition: color var(--transition-speed);}
+        .social-icons i:hover { color: #ccc; }
+        .footer-bottom { text-align: center; font-size: 0.8rem; opacity: 0.8; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px; }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 992px) {
+            .product-grid, .collections-grid { grid-template-columns: repeat(2, 1fr); }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero-img-container { width: 100%; }
+            .hero-card { position: relative; top: auto; left: auto; transform: none; width: 90%; margin: -80px auto 0 auto; z-index: 10; text-align: center;}
+            .hero { flex-direction: column; padding: 0 0 40px 0; }
+            .hero-img-container img { border-radius: 0; height: 500px;}
+        }
+
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            nav ul, .nav-icons > i:not(.cart-icon-wrapper) { display: none; } 
+            .header-top { justify-content: center; position: relative; }
+            .hamburger { position: absolute; left: 0; }
+            .cart-icon-wrapper { position: absolute; right: 0; font-size: 1.4rem; }
+            
+            .section-title { font-size: 2rem; }
+            .product-grid, .collections-grid, .features-grid, .footer-grid { grid-template-columns: 1fr; }
+            
+            .mission-banner h2 { font-size: 1.4rem; }
+            .mission-buttons { flex-direction: column; gap: 15px;}
+            
+            .cta-banner h2 { font-size: 2rem; }
+            .faq-section h2 { font-size: 2rem; }
+            .footer-col { text-align: center; }
+            .sticky-reviews { display: none; } 
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="top-banner" aria-label="Announcements">
+        <i class="fa-solid fa-chevron-left nav-arrow left" aria-label="Previous announcement"></i>
+        <div class="announcement-container">
+            <div class="announcement-msg">20% off on first purchase &rarr;</div>
+            <div class="announcement-msg">15% Off on prepaid orders &rarr;</div>
+        </div>
+        <i class="fa-solid fa-chevron-right nav-arrow right" aria-label="Next announcement"></i>
+    </aside>
+
+    <header>
+        <div class="header-top">
+            <i class="fa-solid fa-bars hamburger" id="open-menu-btn" aria-label="Open menu"></i>
+            <div class="nav-icons" style="margin-right: auto; flex:1;">
+                <i class="fa-solid fa-magnifying-glass" aria-label="Search"></i>
+            </div>
+            
+            <div class="logo-container" style="flex:2;">
+                <a href="#" class="logo"><span>Shu</span><span>pora</span><span style="color:#FF3D4A">.</span></a>
+                <div class="logo-tagline">Smart Choice. Confident Life.</div>
+            </div>
+            
+            <div class="nav-icons" style="margin-left: auto; justify-content: flex-end; flex:1;">
+                <i class="fa-regular fa-user" aria-label="User Account"></i>
+                <div class="cart-icon-wrapper" id="open-cart-btn" aria-label="Shopping Cart">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="cart-badge" id="cart-badge-count">0</span>
+                </div>
+            </div>
+        </div>
+        <nav aria-label="Main Navigation">
+            <ul>
+                <li><a href="#" style="border-bottom: 2px solid #333; padding-bottom: 2px;">Home</a></li>
+                <li><a href="#">Explore Wellness</a></li>
+                <li><a href="#">Hair Care</a></li>
+                <li><a href="#">Sleep & Relaxation</a></li>
+                <li><a href="#">Skin & Body care</a></li>
+                <li><a href="#">About Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="sticky-reviews" aria-hidden="true">★ Reviews</div>
+
+    <div class="overlay" id="ui-overlay"></div>
+
+    <div class="mobile-menu-drawer" id="mobile-menu">
+        <i class="fa-solid fa-xmark close-menu" id="close-menu-btn"></i>
+        <nav class="mobile-nav">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Explore Wellness</a></li>
+                <li><a href="#">Hair Care</a></li>
+                <li><a href="#">Skin & Body Care</a></li>
+                <li><a href="#">Sleep & Relaxation</a></li>
+                <li><a href="#">About Us</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header">
+            <h2>Your Cart (<span id="cart-header-count">0</span>)</h2>
+            <i class="fa-solid fa-xmark close-cart" id="close-cart-btn"></i>
+        </div>
+        
+        <div class="cart-body" id="cart-items-container">
+            <div class="empty-cart-msg" id="empty-cart-msg">
+                <i class="fa-solid fa-cart-shopping" style="font-size: 3rem; color: #ddd; margin-bottom: 15px;"></i>
+                <p>Your cart is currently empty.</p>
+                <button class="btn-black" style="margin-top: 20px;" onclick="document.getElementById('close-cart-btn').click();">Continue Shopping</button>
+            </div>
+            </div>
+
+        <div class="cart-footer">
+            <div class="cart-total-row">
+                <span>Subtotal:</span>
+                <span id="cart-subtotal">Rs. 0.00</span>
+            </div>
+            <p style="font-size: 0.8rem; color: #666; margin-bottom: 15px; text-align: center;">Taxes and shipping calculated at checkout</p>
+            <button class="checkout-btn" onclick="alert('Proceeding to secure checkout...')">Checkout</button>
+        </div>
+    </div>
+
+    <main>
+        <section class="hero">
+            <div class="hero-img-container">
+                <img src="https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=1200&q=80" alt="Couple using Shupora glowing shower head">
+            </div>
+            <div class="hero-card">
+                <h1>Unlock<br>Your<br>Hair's<br>Potential</h1>
+                <p>Experience smart curation for a healthier scalp and vibrant locks.</p>
+                <button class="btn-outline">Find Your Glow</button>
+            </div>
+        </section>
+
+        <section class="section-container">
+            <h2 class="section-title">Bestsellers</h2>
+            <div class="product-grid">
+                
+                <article class="product-card">
+                    <div class="product-img-wrapper">
+                        <span class="badge sale">Sale</span>
+                        <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=400&q=80" loading="lazy" alt="Shower Filter">
+                    </div>
+                    <h3 class="product-title">Shupora™ 20-Layer Advanced Shower Filter</h3>
+                    <div class="stars" aria-label="5 out of 5 stars">★★★★★ <span>(971)</span></div>
+                    <div class="price"><span class="old-price">Rs. 3,999.00</span> Rs. 1,799.00</div>
+                    
+                    <button class="btn-black add-to-cart-btn" data-id="1" data-title="Shupora™ 20-Layer Filter" data-price="1799" data-image="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=150&q=80">
+                        <i class="fa-solid fa-plus"></i> Add to Cart
+                    </button>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-img-wrapper">
+                        <span class="badge sold-out">Sold out</span>
+                        <img src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=400&q=80" loading="lazy" alt="AirFlow Styler">
+                    </div>
+                    <h3 class="product-title">Shupora™ Advanced 5-in-1 AirFlow Styler</h3>
+                    <div class="stars" aria-label="5 out of 5 stars">★★★★★ <span>(350)</span></div>
+                    <div class="price"><span class="old-price">Rs. 2,499.00</span> Rs. 1,499.00</div>
+                    
+                    <button class="btn-black add-to-cart-btn" data-id="2" data-title="Advanced 5-in-1 AirFlow Styler" data-price="1499" data-image="https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=150&q=80">
+                        <i class="fa-solid fa-plus"></i> Add to Cart
+                    </button>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-img-wrapper">
+                        <span class="badge sale">Sale</span>
+                        <img src="https://images.unsplash.com/photo-1589833777085-f55cc5e0dcb4?auto=format&fit=crop&w=400&q=80" loading="lazy" alt="Detox Massager">
+                    </div>
+                    <h3 class="product-title">Shupora™ Pro-Follicle Detox Massager</h3>
+                    <div class="stars" aria-label="5 out of 5 stars">★★★★★ <span>(350)</span></div>
+                    <div class="price"><span class="old-price">Rs. 1,599.00</span> Rs. 599.00</div>
+                    
+                    <button class="btn-black add-to-cart-btn" data-id="3" data-title="Pro-Follicle Detox Massager" data-price="599" data-image="https://images.unsplash.com/photo-1589833777085-f55cc5e0dcb4?auto=format&fit=crop&w=150&q=80">
+                        <i class="fa-solid fa-plus"></i> Add to Cart
+                    </button>
+                </article>
+            </div>
+        </section>
+
+        <section class="mission-banner">
+            <h2>"Our mission is to bring smart, effective, and safe wellness essentials into every home — so you can look better, feel confident, and live a longer, healthier life."</h2>
+            <p>Lav Raj, Founder</p>
+            <div class="mission-buttons">
+                <button class="btn-outline">Get Expert Advice</button>
+                <button class="btn-outline" style="background: rgba(255,255,255,0.1);">Find Your Best Self</button>
+            </div>
+        </section>
+
+        <section class="features-grid">
+            <div class="feature-card">
+                <i class="fa-solid fa-leaf" aria-hidden="true"></i>
+                <h3 style="margin-bottom:10px;">Pure & Kind</h3>
+                <p>Ethically sourced, 100% vegan, and always cruelty-free. Good for you, good for the planet.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-hands-holding-circle" aria-hidden="true"></i>
+                <h3 style="margin-bottom:10px;">Mindful Formulas</h3>
+                <p>Crafted with the finest, high-quality natural ingredients, free from harsh chemicals.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-recycle" aria-hidden="true"></i>
+                <h3 style="margin-bottom:10px;">Planet-Friendly</h3>
+                <p>Committed to sustainable practices. Our packaging is designed for easy recycling and minimal impact.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                <h3 style="margin-bottom:10px;">Proven Efficacy</h3>
+                <p>Every product is designed for real results, bringing you effective solutions for a confident life.</p>
+            </div>
+        </section>
+
+        <section class="section-container">
+            <h2 class="section-title">Collections</h2>
+            <div class="collections-grid">
+                <div class="collection-card">
+                    <img src="https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=600&q=80" loading="lazy" alt="Hair Care Collection">
+                    <p>Hair Care &rarr;</p>
+                </div>
+                <div class="collection-card">
+                    <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=600&q=80" loading="lazy" alt="Skin and Body Care Collection">
+                    <p>Skin & Body Care &rarr;</p>
+                </div>
+                <div class="collection-card">
+                    <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80" loading="lazy" alt="Sleep and Relaxation Collection">
+                    <p>Sleep & Relaxation &rarr;</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="highlights-section">
+            <h2 class="section-title" style="margin-bottom: 10px;">Highlights</h2>
+            <p style="color: #666;">Real people. Real stories. Real results.</p>
+            <div class="video-mockup">
+                <img src="https://images.unsplash.com/photo-1611042553365-9b101441c135?auto=format&fit=crop&w=400&q=80" loading="lazy" alt="Customer Highlight Video">
+                <button class="video-overlay-btn">Get it Now &gt;</button>
+            </div>
+        </section>
+
+        <section class="reviews-section">
+            <h2 class="section-title">What Our Customers Say</h2>
+            <p style="margin-bottom: 40px; color: #666;">Real reviews from real customers</p>
+            
+            <div class="marquee-container" id="review-container">
+                <div class="reviews-wrapper" id="review-track">
+                    <article class="review-card">
+                        <div class="reviewer">
+                            <div class="avatar" style="background:#5C6BC0;" aria-hidden="true">R</div>
+                            <div><strong>Rahul M.</strong><br><span style="font-size:0.8rem; color:#888;">Pune</span></div>
+                        </div>
+                        <div class="stars" aria-label="5 stars">★★★★★</div>
+                        <p class="review-text">"Shupora has completely changed my wellness game. The products are top-notch and the results speak for themselves. My skin and hair have never looked better!"</p>
+                        <div class="verified"><i class="fa-solid fa-circle-check"></i> Verified Purchase</div>
+                    </article>
+                    <article class="review-card">
+                        <div class="reviewer">
+                            <div class="avatar" style="background:#7E57C2;" aria-hidden="true">S</div>
+                            <div><strong>Sneha T.</strong><br><span style="font-size:0.8rem; color:#888;">Hyderabad</span></div>
+                        </div>
+                        <div class="stars" aria-label="5 stars">★★★★★</div>
+                        <p class="review-text">"Best investment I've made for my self-care routine. The quality and effectiveness of Shupora products are unmatched. Highly recommend to everyone!"</p>
+                        <div class="verified"><i class="fa-solid fa-circle-check"></i> Verified Purchase</div>
+                    </article>
+                    <article class="review-card">
+                        <div class="reviewer">
+                            <div class="avatar" style="background:#5E35B1;" aria-hidden="true">K</div>
+                            <div><strong>Kavya N.</strong><br><span style="font-size:0.8rem; color:#888;">Chennai</span></div>
+                        </div>
+                        <div class="stars" aria-label="5 stars">★★★★★</div>
+                        <p class="review-text">"My hair feels so much softer and healthier, and I finally have that confidence I've been missing. This isn't just a product; it's a transformation!"</p>
+                        <div class="verified"><i class="fa-solid fa-circle-check"></i> Verified Purchase</div>
+                    </article>
+                    <article class="review-card">
+                        <div class="reviewer">
+                            <div class="avatar" style="background:#3949AB;" aria-hidden="true">M</div>
+                            <div><strong>Meera S.</strong><br><span style="font-size:0.8rem; color:#888;">Jaipur</span></div>
+                        </div>
+                        <div class="stars" aria-label="5 stars">★★★★★</div>
+                        <p class="review-text">"Amazing quality and fast delivery! Shupora's customer service is excellent. The products work exactly as described and I'm seeing real results."</p>
+                        <div class="verified"><i class="fa-solid fa-circle-check"></i> Verified Purchase</div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-banner">
+            <h2>Shop Now & get up to 20% off</h2>
+            <p>Unlock Exclusive Offers and Wellness Tips - Join Shupora's Community Today!</p>
+            <button class="btn-outline">Join Shupora Community</button>
+        </section>
+
+        <section class="faq-section">
+            <h2>How Shupora Works</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                    <div><i class="fa-regular fa-square-check"></i> What makes Shupora different from others?</div>
+                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    We don't just sell products; we offer solutions. Shupora was founded on the idea of "Smart Curation." We use technology to help you find the *exact* premium wellness tools you need to "Live Better," so you never have to guess what works.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                    <div><i class="fa-regular fa-square-check"></i> What kind of solutions we offer?</div>
+                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    We focus on high-quality, innovative wellness and personal care products. Our curated collection includes advanced hair & scalp care (like our Hard Water Filter and LED Combs), modern posture support, and tools for optimized sleep and recovery.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                    <div><i class="fa-regular fa-square-check"></i> Do we offer Cash on Delivery (COD)?</div>
+                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes, we offer Cash on Delivery (COD) as a convenient payment option for most serviceable pin codes across India. You can select the COD option during checkout to pay for your order in cash when it arrives at your doorstep.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                    <div><i class="fa-regular fa-square-check"></i> What is your shipping & return policy?</div>
+                    <i class="fa-solid fa-chevron-down faq-icon"></i>
+                </div>
+                <div class="faq-answer">
+                    We offer fast, reliable shipping on all orders. If you're not 100% satisfied with your purchase, we have a simple, hassle-free 15-day return policy. You can read our full policy here.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Quick links</h4>
+                <ul>
+                    <li><a href="#">Explore Wellness</a></li>
+                    <li><a href="#">Hair Care</a></li>
+                    <li><a href="#">Sleep & Relaxation</a></li>
+                    <li><a href="#">Skin & Body Care</a></li>
+                    <li><a href="#">About us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Committed to your Smart Choice.<br>Confident Life. Need guidance? Our<br>experts are here.</h4>
+            </div>
+            <div class="footer-col">
+                <h4>Reach Us</h4>
+                <ul>
+                    <li>Email: support@shupora.com</li>
+                    <li>Phone: +91 80847 63900</li>
+                    <li>WhatsApp Chat: <a href="#" style="text-decoration: underline;">Click here</a></li>
+                </ul>
+                <h4 style="margin-top: 20px;">Support Hours:</h4>
+                <ul>
+                    <li>Mon - Fri: 9:00 AM - 6:00 PM</li>
+                    <li>Sat: 10:00 AM - 4:00 PM</li>
+                    <li>Sun: Closed</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="social-icons">
+            <i class="fa-brands fa-facebook" aria-label="Facebook"></i>
+            <i class="fa-brands fa-instagram" aria-label="Instagram"></i>
+        </div>
+
+        <div class="footer-bottom">
+            <span>&copy; 2026, Shupora</span> &middot; 
+            <span><a href="#">Privacy policy</a></span> &middot; 
+            <span><a href="#">Contact Information</a></span> &middot; 
+            <span><a href="#">Shipping policy</a></span> &middot; 
+            <span><a href="#">Terms of service</a></span> &middot; 
+            <span><a href="#">Refund policy</a></span>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // ==========================================
+            // 1. STATE MANAGEMENT & DRAWERS (Cart & Mobile Menu)
+            // ==========================================
+            let cart = []; 
+            const overlay = document.getElementById('ui-overlay');
+            const cartDrawer = document.getElementById('cart-drawer');
+            const openCartBtn = document.getElementById('open-cart-btn');
+            const closeCartBtn = document.getElementById('close-cart-btn');
+            const cartItemsContainer = document.getElementById('cart-items-container');
+            const emptyCartMsg = document.getElementById('empty-cart-msg');
+            const cartBadgeCount = document.getElementById('cart-badge-count');
+            const cartHeaderCount = document.getElementById('cart-header-count');
+            const cartSubtotalEl = document.getElementById('cart-subtotal');
+            const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+
+            const mobileMenu = document.getElementById('mobile-menu');
+            const openMenuBtn = document.getElementById('open-menu-btn');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+
+            function openCart() { cartDrawer.classList.add('open'); overlay.classList.add('active'); document.body.classList.add('no-scroll'); }
+            function closeCart() { cartDrawer.classList.remove('open'); overlay.classList.remove('active'); document.body.classList.remove('no-scroll'); }
+            function openMenu() { mobileMenu.classList.add('open'); overlay.classList.add('active'); document.body.classList.add('no-scroll'); }
+            function closeMenu() { mobileMenu.classList.remove('open'); overlay.classList.remove('active'); document.body.classList.remove('no-scroll'); }
+
+            openCartBtn.addEventListener('click', openCart);
+            closeCartBtn.addEventListener('click', closeCart);
+            openMenuBtn.addEventListener('click', openMenu);
+            closeMenuBtn.addEventListener('click', closeMenu);
+            overlay.addEventListener('click', () => { closeCart(); closeMenu(); });
+
+            function addToCart(product) {
+                const existingItem = cart.find(item => item.id === product.id);
+                if (existingItem) existingItem.quantity += 1;
+                else cart.push({ ...product, quantity: 1 });
+                updateCartUI();
+                openCart(); 
+            }
+
+            window.removeFromCart = function(productId) { 
+                cart = cart.filter(item => item.id !== productId);
+                updateCartUI();
+            };
+
+            window.updateQuantity = function(productId, change) {
+                const item = cart.find(i => i.id === productId);
+                if(item) {
+                    item.quantity += change;
+                    if(item.quantity <= 0) removeFromCart(productId);
+                    else updateCartUI();
+                }
+            };
+
+            function updateCartUI() {
+                const itemsToRemove = cartItemsContainer.querySelectorAll('.cart-item');
+                itemsToRemove.forEach(item => item.remove());
+                let totalItems = 0, subtotal = 0;
+
+                if (cart.length === 0) {
+                    emptyCartMsg.style.display = 'block';
+                } else {
+                    emptyCartMsg.style.display = 'none';
+                    cart.forEach(item => {
+                        totalItems += item.quantity;
+                        subtotal += (item.price * item.quantity);
+                        const itemHTML = `
+                            <div class="cart-item">
+                                <img src="${item.image}" alt="${item.title}">
+                                <div class="cart-item-details">
+                                    <div class="cart-item-title">${item.title}</div>
+                                    <div class="cart-item-price">Rs. ${item.price.toLocaleString()}</div>
+                                    <div class="cart-controls">
+                                        <div class="qty-selector">
+                                            <button class="qty-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
+                                            <input type="text" class="qty-input" value="${item.quantity}" readonly>
+                                            <button class="qty-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
+                                        </div>
+                                        <span class="remove-item" onclick="removeFromCart('${item.id}')">Remove</span>
+                                    </div>
+                                </div>
+                            </div>`;
+                        cartItemsContainer.insertAdjacentHTML('beforeend', itemHTML);
+                    });
+                }
+                cartBadgeCount.textContent = totalItems;
+                cartHeaderCount.textContent = totalItems;
+                cartSubtotalEl.textContent = `Rs. ${subtotal.toLocaleString()}`;
+            }
+
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const btn = e.currentTarget;
+                    const product = {
+                        id: btn.getAttribute('data-id'), title: btn.getAttribute('data-title'),
+                        price: parseInt(btn.getAttribute('data-price')), image: btn.getAttribute('data-image')
+                    };
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> Added';
+                    btn.classList.add('added');
+                    setTimeout(() => { btn.innerHTML = originalText; btn.classList.remove('added'); }, 1500);
+                    addToCart(product);
+                });
+            });
+            updateCartUI();
+
+            // ==========================================
+            // 2. FAQ ACCORDION LOGIC
+            // ==========================================
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                const questionBtn = item.querySelector('.faq-question');
+                questionBtn.addEventListener('click', () => toggleAccordion(item, questionBtn));
+                questionBtn.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleAccordion(item, questionBtn); }
+                });
+            });
+
+            function toggleAccordion(clickedItem, btn) {
+                const isActive = clickedItem.classList.contains('active');
+                faqItems.forEach(item => {
+                    item.classList.remove('active');
+                    item.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                });
+                if (!isActive) {
+                    clickedItem.classList.add('active');
+                    btn.setAttribute('aria-expanded', 'true');
+                }
+            }
+
+            // ==========================================
+            // 3. INTERACTIVE INFINITE REVIEW MARQUEE
+            // ==========================================
+            const container = document.getElementById('review-container');
+            const track = document.getElementById('review-track');
+            const originalCards = Array.from(track.children);
+            
+            // Clone cards twice for seamless looping
+            originalCards.forEach(card => {
+                const clone = card.cloneNode(true);
+                clone.setAttribute('aria-hidden', 'true'); 
+                track.appendChild(clone);
+            });
+            originalCards.forEach(card => {
+                const clone = card.cloneNode(true);
+                clone.setAttribute('aria-hidden', 'true');
+                track.appendChild(clone);
+            });
+
+            let setWidth = 0;
+            function calculateSetWidth() {
+                setWidth = 0;
+                originalCards.forEach(card => setWidth += card.offsetWidth);
+                const gap = parseFloat(window.getComputedStyle(track).gap) || 20;
+                setWidth += originalCards.length * gap;
+                container.scrollLeft = setWidth;
+            }
+
+            setTimeout(calculateSetWidth, 100);
+            window.addEventListener('resize', calculateSetWidth);
+
+            let isAutoScrolling = true, isDragging = false, startX, scrollLeftStart, animationId;
+            const autoScrollSpeed = 1;
+
+            function scrollLoop() {
+                if (isAutoScrolling && !isDragging) container.scrollLeft += autoScrollSpeed;
+                
+                if (container.scrollLeft >= setWidth * 2) {
+                    container.scrollLeft -= setWidth;
+                    if(isDragging) scrollLeftStart -= setWidth;
+                } else if (container.scrollLeft <= 0) {
+                    container.scrollLeft += setWidth;
+                    if(isDragging) scrollLeftStart += setWidth;
+                }
+                animationId = requestAnimationFrame(scrollLoop);
+            }
+            scrollLoop();
+
+            container.addEventListener('mousedown', (e) => {
+                isDragging = true; isAutoScrolling = false;
+                startX = e.pageX - container.offsetLeft;
+                scrollLeftStart = container.scrollLeft;
+                track.classList.add('active');
+            });
+            container.addEventListener('mouseleave', () => { if(isDragging) { isDragging = false; track.classList.remove('active'); isAutoScrolling = true; } });
+            container.addEventListener('mouseup', () => { isDragging = false; track.classList.remove('active'); isAutoScrolling = true; });
+            container.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                const x = e.pageX - container.offsetLeft;
+                container.scrollLeft = scrollLeftStart - ((x - startX) * 1.5);
+            });
+
+            container.addEventListener('touchstart', () => isAutoScrolling = false, {passive: true});
+            container.addEventListener('touchend', () => isAutoScrolling = true, {passive: true});
+        });
+    </script>
+</body>
+</html>
